@@ -1,5 +1,9 @@
 import { exec } from 'k6/execution'
 
+if (!__ENV.AUTHORIZATION_TOKEN) {
+    throw new Error('AUTHORIZATION_TOKEN environment variable not defined!')
+}
+
 export const DEV = 'dev'
 export const UAT = 'uat'
 export const PROD = 'prod'

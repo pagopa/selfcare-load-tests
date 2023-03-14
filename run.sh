@@ -16,7 +16,7 @@ if [[ -z "$ENV" || ! "$ENV" =~ ^(dev|uat|prod)$ || -z "$TEST_FILE" ]]; then
   exit 0
 fi
 
-if [[ -z "AUTHORIZATION_TOKEN" ]]; then
+if [[ -z "$AUTHORIZATION_TOKEN" ]]; then
   echo "Define env variable AUTHORIZATION_TOKEN with a valid authorization token"
   exit 0
 fi
