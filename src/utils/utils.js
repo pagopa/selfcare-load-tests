@@ -34,3 +34,7 @@ export function abort(description) {
         throw new Error(description)
     }
 }
+
+export function coalesce(o1, o2) {
+    return o1 !== undefined && o1 !== null ? o1 : o2
+}

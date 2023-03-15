@@ -50,6 +50,32 @@ parameters:
       displayName: 'perVuIterations scenario: the maximum number of seconds to wait for a single iteration'
       type: number
       default: 10
+    
+    - name: 'THRESHOLDS_API_MAX_AVG_MS_ENV'
+      displayName: 'Max AVG duration applied as default to single API tests'
+      type: number
+      default: 500
+    - name: 'THRESHOLDS_API_MAX_P90_MS_ENV'
+      displayName: 'Max P90 duration applied as default to single API tests'
+      type: number
+      default: 800
+    - name: 'THRESHOLDS_API_MAX_P95_MS_ENV'
+      displayName: 'Max P95 duration applied as default to single API tests'
+      type: number
+      default: 1000
+    
+    - name: 'THRESHOLDS_FE_PAGE_MAX_P95_MS_ENV'
+      displayName: 'Max P95 duration applied as default to FE page tests'
+      type: number
+      default: 1000
+    - name: 'THRESHOLDS_FE_PAGE_MAX_P90_MS_ENV'
+      displayName: 'Max P90 duration applied as default to FE page tests'
+      type: number
+      default: 2500
+    - name: 'THRESHOLDS_FE_PAGE_MAX_P95_MS_ENV'
+      displayName: 'Max P95 duration applied as default to FE page tests'
+      type: number
+      default: 3000
 
 variables:
   testFolders: [$[parameters['dashboard']? 'dashboard': '']]

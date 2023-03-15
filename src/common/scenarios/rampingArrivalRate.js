@@ -1,15 +1,11 @@
-import { vu } from '../../utils/utils.js'
+import { coalesce, vu } from '../../utils/utils.js'
 import { setStages } from '../../utils/stageUtils.js'
 
-const scenarioRampTimeUnit = __ENV.SCENARIO_RAMP_TIME_UNIT_ENV
-    ? __ENV.SCENARIO_RAMP_TIME_UNIT_ENV
-    : 1
+const scenarioRampTimeUnit = coalesce(__ENV.SCENARIO_RAMP_TIME_UNIT_ENV, 1)
 const scenarioRampCustomStages = setStages(
     vu,
     scenarioRampTimeUnit,
-    __ENV.SCENARIO_RAMP_STAGE_NUMBER_ENV > 3
-        ? __ENV.SCENARIO_RAMP_STAGE_NUMBER_ENV
-        : 3
+    Math.max(coalesce(__ENV.SCENARIO_RAMP_STAGE_NUMBER_ENV, 3), 3)
 )
 
 export default {
