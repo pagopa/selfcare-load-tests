@@ -27,7 +27,7 @@ The following environment variables allow to configure tests behaviors:
 | REQ_DUMP                       | A boolen to log all requests or not                                                                                         | false   |
 | VIRTUAL_USERS_ENV              | The number of parallel users to simulate                                                                                    | 3       |
 | SCENARIO_TYPE_ENV              | The scenario to execute, if you want to execute just a single one. Use the keys listed in [Scenarios](#scenarios) paragraph |         |
-| SCENARIO_RAMP_TIME_UNIT_ENV    | rampingArrivalRate scenario: the duration of single ramp stage                                                              | 3       |
+| SCENARIO_RAMP_TIME_UNIT_ENV    | rampingArrivalRate scenario: the duration (seconds) of single ramp stage                                                    | 1       |
 | SCENARIO_RAMP_STAGE_NUMBER_ENV | rampingArrivalRate scenario: the number of stages of the ramp                                                               | 3       |
 | SCENARIO_PER_VU_EXECUTIONS_ENV | perVuIterations scenario: the number of executions which each user will perform                                             | 1       |
 | SCENARIO_PER_VU_DURATION_ENV   | perVuIterations scenario: the maximum number of seconds to wait for a single iteration                                      | 10      |
