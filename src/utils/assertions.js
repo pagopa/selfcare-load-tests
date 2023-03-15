@@ -6,56 +6,46 @@ export function assert(res, assertions) {
     }
 }
 
-export function statusOk() {
+export function statusCheck(expectedState, opName) {
     return function doCheck(res) {
         const isOk = check(res, {
-            'HTTP status is 200': (r) => r.status === 200,
+            [`${opName ? `[${opName}]` : ''}HTTP status is ${expectedState}`]: (
+                r
+            ) => r.status === expectedState,
         })
     }
 }
 
-export function statusAccepted() {
-    return function doCheck(res) {
-        const isOk = check(res, {
-            'HTTP status is 202': (r) => r.status === 202,
-        })
-    }
+export function statusOk(opName) {
+    return statusCheck(200, opName)
 }
 
-export function statusCreated() {
-    return function doCheck(res) {
-        check(res, { 'HTTP status is 201': (r) => r.status === 201 })
-    }
+export function statusCreated(opName) {
+    return statusCheck(201, opName)
 }
 
-export function statusNoContent() {
-    return function doCheck(res) {
-        check(res, { 'HTTP status is 204': (r) => r.status === 204 })
-    }
+export function statusAccepted(opName) {
+    return statusCheck(202, opName)
 }
 
-export function statusUnauthorized() {
-    return function doCheck(res) {
-        check(res, { 'HTTP status is 401': (r) => r.status === 401 })
-    }
+export function statusNoContent(opName) {
+    return statusCheck(204, opName)
 }
 
-export function statusForbidden() {
-    return function doCheck(res) {
-        check(res, { 'HTTP status is 403': (r) => r.status === 403 })
-    }
+export function statusUnauthorized(opName) {
+    return statusCheck(401, opName)
 }
 
-export function statusConflict() {
-    return function doCheck(res) {
-        check(res, { 'HTTP status is 409': (r) => r.status === 409 })
-    }
+export function statusForbidden(opName) {
+    return statusCheck(403, opName)
 }
 
-export function statusBadFormat() {
-    return function doCheck(res) {
-        check(res, { 'HTTP status is 400': (r) => r.status === 400 })
-    }
+export function statusConflict(opName) {
+    return statusCheck(409, opName)
+}
+
+export function statusBadFormat(opName) {
+    return statusCheck(400, opName)
 }
 
 export function bodyLengthBetween(minLength, maxLength) {
@@ -124,7 +114,7 @@ export function idempotence() {
 export function isNotFakeSalt() {
     return (res) => {
         check(res, {
-            'Is not a fake salt': (r) => r.body !== 'FAKE_SALT'
+            'Is not a fake salt': (r) => r.body !== 'FAKE_SALT',
         })
     }
 }

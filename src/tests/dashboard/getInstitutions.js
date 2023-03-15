@@ -1,6 +1,6 @@
 import { assert, statusOk } from '../../utils/assertions.js'
 import { DEV, UAT, PROD, getBaseUrl } from '../../common/envs.js'
-import defaultOptions from '../../common/options.js'
+import { defaultApiOptions } from '../../common/defaultOptions.js'
 import defaultHandleSummaryBuilder from '../../common/handleSummaryBuilder.js'
 import { getInstitutions } from '../../api/dashboard.js'
 
@@ -9,7 +9,7 @@ const REGISTERED_ENVS = [DEV, UAT, PROD]
 const baseUrl = getBaseUrl(REGISTERED_ENVS)
 
 // K6 configurations
-export const options = defaultOptions
+export const options = defaultApiOptions
 export const handleSummary = defaultHandleSummaryBuilder(
     'dashboard/getInstitutions-result.xml'
 )
@@ -18,5 +18,5 @@ export const handleSummary = defaultHandleSummaryBuilder(
 export default () => {
     const result = getInstitutions(baseUrl)
 
-    assert(result, [statusOk()])
+    assert(result, [statusOk('getInstitutions')])
 }
