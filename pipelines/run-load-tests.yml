@@ -126,6 +126,7 @@ steps:
                 searchFolder: '$(System.DefaultWorkingDirectory)'
                 failTaskOnFailedTests: true
           - task: PublishPipelineArtifact@1
+            condition: true
             inputs:
                 targetPath: 'results/${{ testFolder }}'
                 publishLocation: 'pipeline'
