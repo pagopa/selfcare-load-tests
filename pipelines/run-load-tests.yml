@@ -85,8 +85,8 @@ parameters:
       default: 3000
 
 variables:
-    - ${{each parameter in parameters}}:
-          ${{ parameter.Key }}: ${{ parameter.Value }}
+    ${{each parameter in parameters}}:
+        ${{ parameter.Key }}: ${{ parameter.Value }}
 
 steps:
     - script: |
