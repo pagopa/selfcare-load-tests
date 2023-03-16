@@ -117,6 +117,8 @@ steps:
                   ${{ parameters.TARGET_ENV }} ${{ testFolder }}
             condition: true
             displayName: 'Run k6 tests in folder: ${{ testFolder }}'
+          - script: |
+                find /app/results
           - task: PublishTestResults@2
             condition: true
             displayName: 'Publishing results of k6 tests in folder: ${{ testFolder }}'
