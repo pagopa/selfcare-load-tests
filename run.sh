@@ -1,5 +1,5 @@
 #!/bin/sh
-#
+
 # Execute a single test on target environment.
 #
 # Usage: ./run.sh <dev|uat|prod> testFile.js
@@ -11,7 +11,7 @@ set -e
 ENV=$1
 TEST_FILE=$2
 
-if [[ -z "$ENV" || ! "$ENV" =~ ^(dev|uat|prod)$ || -z "$TEST_FILE" ]]; then
+if [[ -z "$ENV" || ! $(echo $ENV | grep  -E "^(dev|uat|prod)$") || -z "$TEST_FILE" ]]; then
   echo "Usage: ./run.sh <dev|uat|prod> testFile.js"
   exit 0
 fi
