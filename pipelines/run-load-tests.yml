@@ -86,7 +86,8 @@ parameters:
 
 variables:
     - ${{each parameter in parameters}}:
-          - ${{ parameter.Key }}: ${{ parameter.Value }}
+          - name: ${{ parameter.Key }}
+            value: ${{ parameter.Value }}
 
 steps:
     - script: |
