@@ -11,6 +11,7 @@ parameters:
       values:
           - 'dev'
           - 'uat'
+
     - name: 'AUTHORIZATION_TOKEN'
       displayName: 'The JWT token used to invoke APIs'
       type: string
@@ -72,8 +73,8 @@ parameters:
       type: number
       default: 1000
 
-    - name: 'THRESHOLDS_FE_PAGE_MAX_P95_MS_ENV'
-      displayName: 'Max P95 duration applied as default to FE page tests'
+    - name: 'THRESHOLDS_FE_PAGE_MAX_AVG_MS_ENV'
+      displayName: 'Max AVG duration applied as default to FE page tests'
       type: number
       default: 1000
     - name: 'THRESHOLDS_FE_PAGE_MAX_P90_MS_ENV'
@@ -100,14 +101,27 @@ steps:
                   -v $(pwd):/app \
                   --workdir "/app" \
                   -e TARGET_ENV=${{ parameters.TARGET_ENV }} \
+
                   -e AUTHORIZATION_TOKEN=${{ parameters.AUTHORIZATION_TOKEN }} \
                   -e INSTITUTION_ID=${{ parameters.INSTITUTION_ID }} \
+
                   -e VIRTUAL_USERS_ENV=${{ parameters.VIRTUAL_USERS_ENV }} \
                   -e SCENARIO_TYPE_ENV=${{ parameters.SCENARIO_TYPE_ENV }} \
+
                   -e SCENARIO_RAMP_STAGE_NUMBER_ENV=${{ parameters.SCENARIO_RAMP_STAGE_NUMBER_ENV }} \
                   -e SCENARIO_RAMP_TIME_UNIT_ENV=${{ parameters.SCENARIO_RAMP_TIME_UNIT_ENV }} \
+
                   -e SCENARIO_PER_VU_EXECUTIONS_ENV=${{ parameters.SCENARIO_PER_VU_EXECUTIONS_ENV }} \
                   -e SCENARIO_PER_VU_DURATION_ENV=${{ parameters.SCENARIO_PER_VU_DURATION_ENV }} \
+
+                  -e THRESHOLDS_API_MAX_AVG_MS_ENV=${{ parameters.THRESHOLDS_API_MAX_AVG_MS_ENV }} \
+                  -e THRESHOLDS_API_MAX_P90_MS_ENV=${{ parameters.THRESHOLDS_API_MAX_P90_MS_ENV }} \
+                  -e THRESHOLDS_API_MAX_P95_MS_ENV=${{ parameters.THRESHOLDS_API_MAX_P95_MS_ENV }} \
+
+                  -e THRESHOLDS_FE_PAGE_MAX_AVG_MS_ENV=${{ parameters.THRESHOLDS_FE_PAGE_MAX_AVG_MS_ENV }} \
+                  -e THRESHOLDS_FE_PAGE_MAX_P90_MS_ENV=${{ parameters.THRESHOLDS_FE_PAGE_MAX_P90_MS_ENV }} \
+                  -e THRESHOLDS_FE_PAGE_MAX_P95_MS_ENV=${{ parameters.THRESHOLDS_FE_PAGE_MAX_P95_MS_ENV }} \
+
                   grafana/k6:latest \
                   /app/runAll.sh ${{ parameters.TARGET_ENV }} ${{ testFolder }}
             displayName: 'Run k6 tests in folder: ${{ testFolder }}'
