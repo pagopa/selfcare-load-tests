@@ -84,10 +84,6 @@ parameters:
       type: number
       default: 3000
 
-variables:
-    ${{each parameter in parameters}}:
-        ${{ parameter.Key }}: ${{ parameter.Value }}
-
 steps:
     - script: |
           docker pull grafana/k6:latest
@@ -104,9 +100,6 @@ steps:
                   -e TARGET_ENV=${{ parameters.TARGET_ENV }} \
                   -e AUTHORIZATION_TOKEN \
                   -e INSTITUTION_ID=${{ parameters.INSTITUTION_ID }} \
-                  \
-                  ${{each parameter in parameters}}:
-                  -e ${{ parameter.Key }}=${{ parameter.Value }}
                   \
                   -e VIRTUAL_USERS_ENV=${{ parameters.VIRTUAL_USERS_ENV }} \
                   -e SCENARIO_TYPE_ENV=${{ parameters.SCENARIO_TYPE_ENV }} \
@@ -130,6 +123,9 @@ steps:
                   ${{ parameters.TARGET_ENV }} ${{ testFolder }}
             condition: true
             displayName: 'Run k6 tests in folder: ${{ testFolder }}'
+            env:
+                ${{ each parameter in parameters }}:
+                    ${{ parameter.Key }}: ${{ parameter.Value }}
           - task: PublishTestResults@2
             condition: true
             displayName: 'Publishing TestResults of k6 tests in folder: ${{ testFolder }}'
