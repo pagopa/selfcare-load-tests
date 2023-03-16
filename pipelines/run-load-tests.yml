@@ -16,18 +16,16 @@ parameters:
       displayName: 'The JWT token used to invoke APIs'
       type: string
     - name: 'INSTITUTION_ID'
-      displayName: "The institution id to use for institution's based APIs"
+      displayName: "The institution id to use for institution's based APIs. If Auto, it will use the first ACTIVE institution related to the token's user"
       type: string
       default: 'Auto'
 
-    - name: 'dashboard'
-      displayName: "Run dashboard's Api tests"
-      type: boolean
-      default: true
-    - name: 'fe-dashboard'
-      displayName: "Run dashboard's FE pages tests"
-      type: boolean
-      default: true
+    - name: 'testFolders'
+      displayName: 'Which tests should be executed'
+      type: object
+      default:
+          - 'dashboard'
+          - 'fe-dashboard'
 
     - name: 'VIRTUAL_USERS_ENV'
       displayName: 'Number of virtual users (1 - 100 000)'
@@ -61,39 +59,36 @@ parameters:
       default: 10
 
     - name: 'THRESHOLDS_API_MAX_AVG_MS_ENV'
-      displayName: 'Max AVG duration applied as default to single API tests'
+      displayName: 'Max AVG milliseconds applied as default to single API tests'
       type: number
       default: 500
     - name: 'THRESHOLDS_API_MAX_P90_MS_ENV'
-      displayName: 'Max P90 duration applied as default to single API tests'
+      displayName: 'Max P90 milliseconds applied as default to single API tests'
       type: number
       default: 800
     - name: 'THRESHOLDS_API_MAX_P95_MS_ENV'
-      displayName: 'Max P95 duration applied as default to single API tests'
+      displayName: 'Max P95 milliseconds applied as default to single API tests'
       type: number
       default: 1000
 
     - name: 'THRESHOLDS_FE_PAGE_MAX_AVG_MS_ENV'
-      displayName: 'Max AVG duration applied as default to FE page tests'
+      displayName: 'Max AVG milliseconds applied as default to FE page tests'
       type: number
       default: 1000
     - name: 'THRESHOLDS_FE_PAGE_MAX_P90_MS_ENV'
-      displayName: 'Max P90 duration applied as default to FE page tests'
+      displayName: 'Max P90 milliseconds applied as default to FE page tests'
       type: number
       default: 2500
     - name: 'THRESHOLDS_FE_PAGE_MAX_P95_MS_ENV'
-      displayName: 'Max P95 duration applied as default to FE page tests'
+      displayName: 'Max P95 milliseconds applied as default to FE page tests'
       type: number
       default: 3000
-
-variables:
-    testFolders: ['dashboard', 'fe-dashboard']
 
 steps:
     - script: |
           docker pull grafana/k6:latest
       displayName: Pull k6 image
-    - ${{each testFolder in variables.testFolders}}:
+    - ${{each testFolder in parameters.testFolders}}:
           - scripts: |
                 docker run -i \
                   --name ksixtests \
