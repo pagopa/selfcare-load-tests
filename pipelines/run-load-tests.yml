@@ -105,6 +105,9 @@ steps:
                   -e AUTHORIZATION_TOKEN \
                   -e INSTITUTION_ID=${{ parameters.INSTITUTION_ID }} \
                   \
+                  ${{each parameter in parameters}}:
+                  -e ${{ parameter.Key }}=${{ parameter.Value }}
+                  \
                   -e VIRTUAL_USERS_ENV=${{ parameters.VIRTUAL_USERS_ENV }} \
                   -e SCENARIO_TYPE_ENV=${{ parameters.SCENARIO_TYPE_ENV }} \
                   \
