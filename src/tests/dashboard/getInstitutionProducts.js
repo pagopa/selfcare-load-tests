@@ -16,7 +16,7 @@ export function setup() {
 // K6 configurations
 export const options = defaultApiOptions
 export const handleSummary = defaultHandleSummaryBuilder(
-    'dashboard/getInstitutionProducts-result.xml'
+    'dashboard/getInstitutionProducts'
 )
 
 // K6 test

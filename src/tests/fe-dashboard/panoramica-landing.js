@@ -18,7 +18,7 @@ export function setup() {
 // K6 configurations
 export const options = defaultFePageOptions
 export const handleSummary = defaultHandleSummaryBuilder(
-    'fe-dashboard/panoramica-result.xml'
+    'fe-dashboard/panoramica'
 )
 
 // K6 test

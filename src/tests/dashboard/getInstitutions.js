@@ -11,7 +11,7 @@ const baseUrl = getBaseUrl(REGISTERED_ENVS)
 // K6 configurations
 export const options = defaultApiOptions
 export const handleSummary = defaultHandleSummaryBuilder(
-    'dashboard/getInstitutions-result.xml'
+    'dashboard/getInstitutions'
 )
 
 // K6 test
