@@ -90,8 +90,8 @@ steps:
       displayName: Pull k6 image
     - ${{each testFolder in parameters.testFolders}}:
           - script: |
-                chmod +x /app/runAll.sh
-                chmod +x /app/run.sh
+                chmod +x runAll.sh
+                chmod +x run.sh
                 docker run -i \
                   --name ksixtests \
                   --user $UID \
