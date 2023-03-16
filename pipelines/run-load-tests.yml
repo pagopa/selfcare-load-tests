@@ -92,8 +92,7 @@ steps:
           - script: |
                 chmod +x runAll.sh
                 chmod +x run.sh
-                docker run -i \
-                  --name ksixtests \
+                docker run --rm \
                   --user $UID \
                   -v $(pwd):/app \
                   --workdir "/app" \
@@ -113,8 +112,7 @@ steps:
                   -e THRESHOLDS_FE_PAGE_MAX_P90_MS_ENV=${{ parameters.THRESHOLDS_FE_PAGE_MAX_P90_MS_ENV }} \
                   -e THRESHOLDS_FE_PAGE_MAX_P95_MS_ENV=${{ parameters.THRESHOLDS_FE_PAGE_MAX_P95_MS_ENV }} \
                   --entrypoint /app/runAll.sh \
-                  grafana/k6:latest \
-                  ${{ parameters.TARGET_ENV }} ${{ testFolder }}
+                  grafana/k6:latest
             displayName: 'Run k6 tests in folder: ${{ testFolder }}'
           - task: PublishTestResults@2
             displayName: 'Publishing results of k6 tests in folder: ${{ testFolder }}'
