@@ -23,6 +23,7 @@ The following environment variables allow to configure tests behaviors:
 | ENV                               | Description                                                                                                                 | Default |
 | --------------------------------- | --------------------------------------------------------------------------------------------------------------------------- | ------- |
 | TARGET_ENV                        | The environment to test                                                                                                     |         |
+| RESULTS_DIR                       | The directory inside which create the results dir                                                                           | .       |
 | AUTHORIZATION_TOKEN               | The Bearer token to authorize requests                                                                                      |         |
 | REQ_DUMP                          | A boolen to log all requests or not                                                                                         | false   |
 | VIRTUAL_USERS_ENV                 | The number of parallel users to simulate                                                                                    | 3       |

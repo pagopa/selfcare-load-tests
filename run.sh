@@ -4,6 +4,8 @@
 #
 # Usage: ./run.sh <dev|uat|prod> testFile.js
 
+RESULTS_DIR=$RESULTS_DIR || $(dirname $0)
+
 K6_BINARY="k6"
 
 set -e
@@ -23,6 +25,6 @@ fi
 
 echo "Running $TEST_FILE"
 
-mkdir -p results/$(basename $(dirname $TEST_FILE))
+mkdir -p $RESULTS_DIR/results/$(basename $(dirname $TEST_FILE))
 
 TARGET_ENV=$ENV $K6_BINARY run $TEST_FILE

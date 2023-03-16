@@ -2,6 +2,9 @@ import {
     jUnit,
     textSummary,
 } from 'https://jslib.k6.io/k6-summary/0.0.2/index.js'
+import { coalesce } from '../utils/utils.js'
+
+const outputDir = coalesce(__ENV.RESULTS_DIR, '.')
 
 export default (outputFile) => (data) => {
     console.log(
@@ -18,6 +21,6 @@ export default (outputFile) => (data) => {
     }
     return {
         stdout: textSummary(data, { indent: ' ', enableColors: true }),
-        [`results/${outputFile}`]: jUnit(data),
+        [`${outputDir}/results/${outputFile}`]: jUnit(data),
     }
 }
