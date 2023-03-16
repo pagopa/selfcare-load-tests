@@ -118,7 +118,7 @@ steps:
             condition: true
             displayName: 'Run k6 tests in folder: ${{ testFolder }}'
           - script: |
-                find /app/results
+                find /app
             condition: true
           - task: PublishTestResults@2
             condition: true

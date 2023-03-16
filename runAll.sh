@@ -32,6 +32,6 @@ for TEST in $(find $TESTS_DIR/$FOLDER -iname *$K6_TEST_FILEEXT); do
 
 done;
 
-find /app/results
+find /app
 
 exit $FINAL_EXIT_CODE
