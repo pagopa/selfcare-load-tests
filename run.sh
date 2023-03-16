@@ -1,4 +1,4 @@
-
+#!/bin/bash
 #
 # Execute a single test on target environment.
 #
