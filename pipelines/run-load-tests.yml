@@ -20,7 +20,11 @@ parameters:
       default: "Auto"
 
     - name: 'dashboard'
-      displayName: 'Run dashboard tests'
+      displayName: 'Run dashboard's Api tests'
+      type: boolean
+      default: true
+    - name: 'fe-dashboard'
+      displayName: 'Run dashboard's FE pages tests'
       type: boolean
       default: true
     
@@ -82,7 +86,10 @@ parameters:
       default: 3000
 
 variables:
-  testFolders: [$[parameters['dashboard']? 'dashboard': '']]
+  testFolders: [
+    'dashboard',
+    'fe-dashboard'
+  ]
 
 steps:
     - script: |
