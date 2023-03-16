@@ -98,7 +98,7 @@ steps:
                   --workdir "/app" \
                   -e RESULTS_DIR=/app \
                   -e TARGET_ENV=${{ parameters.TARGET_ENV }} \
-                  -e AUTHORIZATION_TOKEN \
+                  -e AUTHORIZATION_TOKEN=${{ parameters.AUTHORIZATION_TOKEN }} \
                   -e INSTITUTION_ID=${{ parameters.INSTITUTION_ID }} \
                   \
                   -e VIRTUAL_USERS_ENV=${{ parameters.VIRTUAL_USERS_ENV }} \
@@ -123,9 +123,6 @@ steps:
                   ${{ parameters.TARGET_ENV }} ${{ testFolder }}
             condition: true
             displayName: 'Run k6 tests in folder: ${{ testFolder }}'
-            env:
-                ${{ each parameter in parameters }}:
-                    ${{ parameter.Key }}: ${{ parameter.Value }}
           - task: PublishTestResults@2
             condition: true
             displayName: 'Publishing TestResults of k6 tests in folder: ${{ testFolder }}'
