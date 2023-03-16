@@ -4,7 +4,7 @@ import { getInstitutions } from '../api/dashboard.js'
 import { abort } from './utils.js'
 
 export function retrieveInstitutionId(baseUrl) {
-    if (__ENV.INSTITUTION_ID) {
+    if (__ENV.INSTITUTION_ID && __ENV.INSTITUTION_ID !== 'Auto') {
         return __ENV.INSTITUTION_ID
     } else {
         const result = getInstitutions(baseUrl)

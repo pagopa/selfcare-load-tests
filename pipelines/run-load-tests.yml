@@ -14,6 +14,10 @@ parameters:
     - name: 'AUTHORIZATION_TOKEN'
       displayName: 'The JWT token used to invoke APIs'
       type: string
+    - name: 'INSTITUTION_ID'
+      displayName: 'The institution id to use for institution''s based APIs'
+      type: string
+      default: "Auto"
 
     - name: 'dashboard'
       displayName: 'Run dashboard tests'
@@ -25,11 +29,11 @@ parameters:
       type: number
       default: 3
     - name: 'SCENARIO_TYPE_ENV'
-      displayName: 'Scenario type (if empty, it will execute all)'
+      displayName: 'Scenario type'
       type: string
-      default: ''
+      default: 'All'
       values:
-          - ''
+          - 'All'
           - 'rampingArrivalRate'
           - 'perVuIterations'
     
@@ -93,6 +97,7 @@ steps:
             --workdir "/app" \
             -e TARGET_ENV=${{ parameters.TARGET_ENV }} \
             -e AUTHORIZATION_TOKEN=${{ parameters.AUTHORIZATION_TOKEN }} \
+            -e INSTITUTION_ID=${{ parameters.INSTITUTION_ID }} \
             -e VIRTUAL_USERS_ENV=${{ parameters.VIRTUAL_USERS_ENV }} \
             -e SCENARIO_TYPE_ENV=${{ parameters.SCENARIO_TYPE_ENV }} \
             -e SCENARIO_RAMP_STAGE_NUMBER_ENV=${{ parameters.SCENARIO_RAMP_STAGE_NUMBER_ENV }} \
