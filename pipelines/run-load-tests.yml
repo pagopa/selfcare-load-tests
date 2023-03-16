@@ -129,5 +129,6 @@ steps:
             displayName: 'Publishing results of k6 tests in folder: ${{ testFolder }}'
             condition: true
             inputs:
+                artifact: ${{ testFolder }}
                 targetPath: 'results/${{ testFolder }}'
                 publishLocation: 'pipeline'
