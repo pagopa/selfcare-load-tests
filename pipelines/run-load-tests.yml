@@ -112,13 +112,14 @@ steps:
                   -e THRESHOLDS_FE_PAGE_MAX_AVG_MS_ENV=${{ parameters.THRESHOLDS_FE_PAGE_MAX_AVG_MS_ENV }} \
                   -e THRESHOLDS_FE_PAGE_MAX_P90_MS_ENV=${{ parameters.THRESHOLDS_FE_PAGE_MAX_P90_MS_ENV }} \
                   -e THRESHOLDS_FE_PAGE_MAX_P95_MS_ENV=${{ parameters.THRESHOLDS_FE_PAGE_MAX_P95_MS_ENV }} \
-                  --entrypoint pwd \
-                  grafana/k6:latest
+                  --entrypoint /app/runAll.sh \
+                  grafana/k6:latest \
+                  ${{ parameters.TARGET_ENV }} ${{ testFolder }}
             displayName: 'Run k6 tests in folder: ${{ testFolder }}'
           - task: PublishTestResults@2
             displayName: 'Publishing results of k6 tests in folder: ${{ testFolder }}'
             inputs:
                 testResultsFormat: 'JUnit'
-                testResultsFiles: '/app/result/**/*-result.xml'
+                testResultsFiles: '/app/results/${{ testFolder }}/*-result.xml'
                 searchFolder: '$(System.DefaultWorkingDirectory)'
                 failTaskOnFailedTests: true

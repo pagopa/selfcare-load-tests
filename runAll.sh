@@ -5,8 +5,9 @@
 #
 # Usage: ./runAll.sh <dev|uat|prod> [folder]
 
+CURRENT_DIR=$(dirname $0)
 
-TESTS_DIR="src/tests"
+TESTS_DIR=$CURRENT_DIR"/src/tests"
 K6_TEST_FILEEXT=".js"
 
 set -e
@@ -20,5 +21,5 @@ if [[ -z "$ENV" || ! "$ENV" =~ ^(dev|uat|prod)$ ]]; then
 fi
 
 for TEST in $(find $TESTS_DIR/$FOLDER -iname *$K6_TEST_FILEEXT); do
-	./run.sh $ENV $TEST
+	$CURRENT_DIR/run.sh $ENV $TEST
 done;
