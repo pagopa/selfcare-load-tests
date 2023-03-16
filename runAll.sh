@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 #
 # Quickly perform a load tests on target environment by running each
 # test found under src/tests/[folder] once (if folder is not provided, it will run all tests).
