@@ -84,6 +84,10 @@ parameters:
       type: number
       default: 3000
 
+variables:
+    - ${{each parameter in parameters}}:
+    - ${{ parameter.Key }}=${{ parameter.Value }}
+
 steps:
     - script: |
           docker pull grafana/k6:latest
