@@ -122,6 +122,6 @@ steps:
             displayName: 'Publishing results of k6 tests in folder: ${{ testFolder }}'
             inputs:
                 testResultsFormat: 'JUnit'
-                testResultsFiles: 'results/${{ testFolder }}/*-result.xml'
+                testResultsFiles: 'results/${{ testFolder }}/*'
                 searchFolder: '$(System.DefaultWorkingDirectory)'
                 failTaskOnFailedTests: true
