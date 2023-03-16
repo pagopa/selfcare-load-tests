@@ -20,6 +20,16 @@ if [[ -z "$ENV" || ! $(echo $ENV | grep  -E "^(dev|uat|prod)$") ]]; then
   exit 0
 fi
 
+FINAL_EXIT_CODE=0
+
 for TEST in $(find $TESTS_DIR/$FOLDER -iname *$K6_TEST_FILEEXT); do
-	$CURRENT_DIR/run.sh $ENV $TEST
+	$CURRENT_DIR/run.sh $ENV $TEST || TEST_EXIT_CODE=$?
+
+  if [[ $TEST_EXIT_CODE != 0 ]]; then
+    FINAL_EXIT_CODE=$TEST_EXIT_CODE
+  fi
+  
+
 done;
+
+exit $FINAL_EXIT_CODE
