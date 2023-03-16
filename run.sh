@@ -4,7 +4,7 @@
 #
 # Usage: ./run.sh <dev|uat|prod> testFile.js
 
-RESULTS_DIR=$RESULTS_DIR || $(dirname $0)
+export RESULTS_DIR=$RESULTS_DIR || $(dirname $0)
 
 K6_BINARY="k6"
 
