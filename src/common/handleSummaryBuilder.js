@@ -3,9 +3,9 @@ import {
     textSummary,
 } from 'https://jslib.k6.io/k6-summary/0.0.3/index.js'
 import { htmlReport } from 'https://raw.githubusercontent.com/benc-uk/k6-reporter/main/dist/bundle.js'
-import { coalesce } from '../utils/utils.js'
+import { coalesceString } from '../utils/utils.js'
 
-const outputDir = coalesce(__ENV.RESULTS_DIR, '.')
+const outputDir = coalesceString(__ENV.RESULTS_DIR, '.')
 
 export default (outputFilePrefix) => (data) => {
     console.log(

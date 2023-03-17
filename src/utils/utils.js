@@ -35,6 +35,18 @@ export function abort(description) {
     }
 }
 
-export function coalesce(o1, o2) {
-    return o1 !== undefined && o1 !== null ? o1 : o2
+export function isNotNull(o1) {
+    return o1 !== undefined && o1 !== null
+}
+
+export function isNotEmpty(o1) {
+    return isNotNull(o1) && o1 !== ''
+}
+
+export function coalesce(o1, o2, testFunc = isNotNull) {
+    return testFunc(o1) ? o1 : o2
+}
+
+export function coalesceString(o1, o2) {
+    return coalesce(o1, o2, isNotEmpty)
 }

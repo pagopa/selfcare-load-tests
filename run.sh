@@ -6,6 +6,10 @@
 
 export RESULTS_DIR=$RESULTS_DIR || $(dirname $0)
 
+if [[ -z "$RESULTS_DIR" ]]; then
+  export RESULTS_DIR=.
+fi
+
 K6_BINARY="k6"
 
 set -e
