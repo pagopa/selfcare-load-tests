@@ -9,7 +9,7 @@ const REGISTERED_ENVS = [DEV, UAT, PROD]
 const baseUrl = getBaseUrl(REGISTERED_ENVS)
 
 const application = 'dashboard'
-const testName = 'getInstitutionProducts'
+const testName = 'getInstitutions'
 
 // K6 configurations
 export const options = defaultApiOptionsBuilder(application, testName)
