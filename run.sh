@@ -31,4 +31,4 @@ echo "Running $TEST_FILE"
 
 mkdir -p $RESULTS_DIR/results/$(basename $(dirname $TEST_FILE))
 
-TARGET_ENV=$ENV $K6_BINARY run $TEST_FILE
+TARGET_ENV=$ENV $K6_BINARY run $TEST_FILE --out influxdb=http://localhost:8086/myk6db

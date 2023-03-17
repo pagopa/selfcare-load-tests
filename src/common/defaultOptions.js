@@ -19,6 +19,12 @@ const maxFePageP95DurationMs = coalesce(
     3000
 )
 
+function applyTags(options, tags) {
+    return Object.assign({}, options, {
+        tags,
+    })
+}
+
 export const defaultApiOptions = {
     scenarios: buildScenarios(),
     thresholds: buildThresholds(
@@ -28,6 +34,10 @@ export const defaultApiOptions = {
     ),
 }
 
+export function defaultApiOptionsBuilder(application, testName) {
+    return applyTags(defaultApiOptions, { application, testName })
+}
+
 export const defaultFePageOptions = {
     scenarios: defaultApiOptions.scenarios,
     thresholds: buildThresholds(
@@ -35,4 +45,8 @@ export const defaultFePageOptions = {
         maxFePageP90DurationMs,
         maxFePageP95DurationMs
     ),
+}
+
+export function defaultFePageOptionsBuilder(application, testName) {
+    return applyTags(defaultFePageOptions, { application, testName })
 }
