@@ -10,7 +10,10 @@ if [[ -z "$RESULTS_DIR" ]]; then
   export RESULTS_DIR=.
 fi
 
-K6_BINARY="k6"
+
+if [[ -z "$K6_BINARY" ]]; then
+  K6_BINARY="k6"
+fi
 
 set -e
 
@@ -34,7 +37,7 @@ mkdir -p $RESULTS_DIR/results/$(basename $(dirname $TEST_FILE))
 export K6_INFLUXDB_TAGS_AS_FIELDS=application,testName
 
 # TODO REMOVEME
-INFLUXDB_URL=http://localhost:8086/myk6db
+#INFLUXDB_URL=http://localhost:8086/myk6db
 
 if [[ -n "$INFLUXDB_URL" ]]; then
   INFLUXDB_CONFIG="--out influxdb=$INFLUXDB_URL"
