@@ -89,15 +89,12 @@ variables:
     ${{ if eq(parameters.TARGET_ENV, 'dev') }}:
         azureServiceName: '$(dev_azure_azure_service_name)'
         azurKeyVaultName: 'selc-d-kv'
-        INFLUXDB_URL: http://localhost:8086/myk6db
     ${{ elseif eq(parameters.TARGET_ENV, 'uat') }}:
         azureServiceName: '$(uat_azure_azure_service_name)'
         azurKeyVaultName: 'selc-u-kv'
-        INFLUXDB_URL: http://localhost:8086/myk6db
     ${{ elseif eq(parameters.TARGET_ENV, 'prod') }}:
         azureServiceName: '$(prod_azure_azure_service_name)'
         azureKeyVaultName: 'selc-p-kv'
-        INFLUXDB_URL: http://localhost:8086/myk6db
 
     ${{ if ne(parameters.AUTHORIZATION_TOKEN, 'Secret') }}:
         load-test-authorization-token: '${{ parameters.AUTHORIZATION_TOKEN }}'
@@ -124,8 +121,6 @@ steps:
                   -e TARGET_ENV=${{ parameters.TARGET_ENV }} \
                   -e AUTHORIZATION_TOKEN=$(load-test-authorization-token) \
                   -e INSTITUTION_ID=${{ parameters.INSTITUTION_ID }} \
-                  \
-                  -e INFLUXDB_URL=${{ variables.INFLUXDB_URL }} \
                   \
                   -e VIRTUAL_USERS_ENV=${{ parameters.VIRTUAL_USERS_ENV }} \
                   -e SCENARIO_TYPE_ENV=${{ parameters.SCENARIO_TYPE_ENV }} \
