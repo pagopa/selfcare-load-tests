@@ -107,7 +107,6 @@ steps:
           - task: AzureKeyVault@2
             inputs:
                 azureSubscription: ${{ parameters.azureSubscription }}
-                connectedServiceName: $(azureServiceName)
                 keyVaultName: $(azureKeyVaultName)
                 secretsFilter: 'load-test-authorization-token'
     - script: |
