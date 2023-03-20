@@ -13,7 +13,7 @@ parameters:
           - 'uat'
 
     - name: 'AUTHORIZATION_TOKEN'
-      displayName: 'The JWT token used to invoke APIs. Use ''Secret'' in order to read it from KeyVault'
+      displayName: "The JWT token used to invoke APIs. Use 'Secret' in order to read it from KeyVault"
       type: string
       default: 'Secret'
     - name: 'INSTITUTION_ID'
@@ -98,18 +98,17 @@ variables:
         azureServiceName: '$(prod_azure_azure_service_name)'
         azureKeyVaultName: 'selc-p-kv'
         INFLUXDB_URL: http://localhost:8086/myk6db
-    
 
     ${{ if ne(parameters.AUTHORIZATION_TOKEN, 'Secret') }}:
-      load-test-authorization-token: '${{ parameters.AUTHORIZATION_TOKEN }}'
+        load-test-authorization-token: '${{ parameters.AUTHORIZATION_TOKEN }}'
 
 steps:
     - ${{ if eq(parameters.AUTHORIZATION_TOKEN, 'Secret') }}:
-      - task: AzureKeyVault@2
+          - task: AzureKeyVault@2
             inputs:
-              connectedServiceName: $(azureServiceName)
-              keyVaultName: $(azureKeyVaultName)
-              secretsFilter: 'load-test-authorization-token'
+                connectedServiceName: $(azureServiceName)
+                keyVaultName: $(azureKeyVaultName)
+                secretsFilter: 'load-test-authorization-token'
     - script: |
           docker pull grafana/k6:latest
       displayName: Pull k6 image
