@@ -39,8 +39,8 @@ export K6_INFLUXDB_TAGS_AS_FIELDS=application,testName
 if [[ -n "$INFLUXDB_URL" ]]; then
   for url in ${INFLUXDB_URL//;/ } ; do
     CURL_EXIT_CODE=
-    curl -m 1 $url || CURL_EXIT_CODE=$?
-    if [ -z "$CURL_EXIT_CODE" ]; then
+    wget --timeout 1 --tries 1 $url || CURL_EXIT_CODE=$?
+    if [[ "$CURL_EXIT_CODE" == "8" ]]; then
       INFLUXDB_CONFIG="--out influxdb=$url"
     fi
   done
