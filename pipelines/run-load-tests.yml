@@ -12,9 +12,6 @@ parameters:
           - 'dev'
           - 'uat'
 
-    - name: 'azureSubscription'
-      displayName: 'prova'
-      type: string
     - name: 'AUTHORIZATION_TOKEN'
       displayName: "The JWT token used to invoke APIs. Use 'Secret' in order to read it from KeyVault"
       type: string
@@ -106,7 +103,7 @@ steps:
     - ${{ if eq(parameters.AUTHORIZATION_TOKEN, 'Secret') }}:
           - task: AzureKeyVault@2
             inputs:
-                azureSubscription: ${{ parameters.azureSubscription }}
+                connectedServiceName: $(azureServiceName)
                 keyVaultName: $(azureKeyVaultName)
                 secretsFilter: 'load-test-authorization-token'
     - script: |
