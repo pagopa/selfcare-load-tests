@@ -87,7 +87,7 @@ parameters:
 
 variables:
     ${{ if eq(parameters.TARGET_ENV, 'dev') }}:
-        selfHostedAgentPool: selfcare-dev-linux
+        selfHostedAgentPool: $(DEV_AGENT_POOL)
     ${{ elseif eq(parameters.TARGET_ENV, 'uat') }}:
         selfHostedAgentPool: $(UAT_AGENT_POOL)
     ${{ elseif eq(parameters.TARGET_ENV, 'prod') }}:
