@@ -102,7 +102,7 @@ steps:
                   --workdir "/app" \
                   -e RESULTS_DIR=/app \
                   -e TARGET_ENV=${{ parameters.TARGET_ENV }} \
-                  -e INFLUXDB_URL=${{ parameters.INFLUXDB_URL }} \
+                  -e INFLUXDB_URL="${{ parameters.INFLUXDB_URL }}" \
                   -e AUTHORIZATION_TOKEN=${{ parameters.AUTHORIZATION_TOKEN }} \
                   -e INSTITUTION_ID=${{ parameters.INSTITUTION_ID }} \
                   \
