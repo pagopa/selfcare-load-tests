@@ -31,4 +31,13 @@ echo "Running $TEST_FILE"
 
 mkdir -p $RESULTS_DIR/results/$(basename $(dirname $TEST_FILE))
 
-TARGET_ENV=$ENV $K6_BINARY run $TEST_FILE --out influxdb=http://localhost:8086/myk6db
+export K6_INFLUXDB_TAGS_AS_FIELDS=application,testName
+
+# TODO REMOVEME
+INFLUXDB_URL=http://localhost:8086/myk6db
+
+if [[ -n "$INFLUXDB_URL" ]]; then
+  INFLUXDB_CONFIG="--out influxdb=$INFLUXDB_URL"
+fi
+
+TARGET_ENV=$ENV $K6_BINARY run $TEST_FILE $INFLUXDB_CONFIG
