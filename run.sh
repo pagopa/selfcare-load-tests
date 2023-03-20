@@ -38,6 +38,7 @@ export K6_INFLUXDB_TAGS_AS_FIELDS=application,testName
 
 if [[ -n "$INFLUXDB_URL" ]]; then
   for url in ${INFLUXDB_URL//;/ } ; do
+  echo "TESTING '$url'"
     CURL_EXIT_CODE=
     wget --timeout 2 --tries 1 $url || CURL_EXIT_CODE=$?
     if [[ "$CURL_EXIT_CODE" == "8" ]]; then
