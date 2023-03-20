@@ -1,0 +1,140 @@
+trigger: none
+
+pool:
+    vmImage: ubuntu-22.04
+
+parameters:
+    - name: 'TARGET_ENV'
+      displayName: 'Target Environment'
+      type: string
+      default: 'uat'
+      values:
+          - 'dev'
+          - 'uat'
+
+    - name: 'AUTHORIZATION_TOKEN'
+      displayName: 'The JWT token used to invoke APIs'
+      type: string
+    - name: 'INSTITUTION_ID'
+      displayName: "The institution id to use for institution's based APIs. If Auto, it will use the first ACTIVE institution related to the token's user"
+      type: string
+      default: 'Auto'
+
+    - name: 'testFolders'
+      displayName: 'Which tests should be executed'
+      type: object
+      default:
+          - 'dashboard'
+          - 'fe-dashboard'
+
+    - name: 'VIRTUAL_USERS_ENV'
+      displayName: 'Number of virtual users (1 - 100 000)'
+      type: number
+      default: 3
+    - name: 'SCENARIO_TYPE_ENV'
+      displayName: 'Scenario type'
+      type: string
+      default: 'All'
+      values:
+          - 'All'
+          - 'rampingArrivalRate'
+          - 'perVuIterations'
+
+    - name: 'SCENARIO_RAMP_STAGE_NUMBER_ENV'
+      displayName: 'rampingArrivalRate scenario: Number of ramping stages (min: 3)'
+      type: number
+      default: 3
+    - name: 'SCENARIO_RAMP_TIME_UNIT_ENV'
+      displayName: 'rampingArrivalRate scenario: The duration (seconds) of a single stage'
+      type: number
+      default: 1
+
+    - name: 'SCENARIO_PER_VU_EXECUTIONS_ENV'
+      displayName: 'perVuIterations scenario: the number of executions which each user will perform'
+      type: number
+      default: 1
+    - name: 'SCENARIO_PER_VU_DURATION_ENV'
+      displayName: 'perVuIterations scenario: the maximum number of seconds to wait for a single iteration'
+      type: number
+      default: 10
+
+    - name: 'THRESHOLDS_API_MAX_AVG_MS_ENV'
+      displayName: 'Max AVG milliseconds applied as default to single API tests'
+      type: number
+      default: 500
+    - name: 'THRESHOLDS_API_MAX_P90_MS_ENV'
+      displayName: 'Max P90 milliseconds applied as default to single API tests'
+      type: number
+      default: 800
+    - name: 'THRESHOLDS_API_MAX_P95_MS_ENV'
+      displayName: 'Max P95 milliseconds applied as default to single API tests'
+      type: number
+      default: 1000
+
+    - name: 'THRESHOLDS_FE_PAGE_MAX_AVG_MS_ENV'
+      displayName: 'Max AVG milliseconds applied as default to FE page tests'
+      type: number
+      default: 1000
+    - name: 'THRESHOLDS_FE_PAGE_MAX_P90_MS_ENV'
+      displayName: 'Max P90 milliseconds applied as default to FE page tests'
+      type: number
+      default: 2500
+    - name: 'THRESHOLDS_FE_PAGE_MAX_P95_MS_ENV'
+      displayName: 'Max P95 milliseconds applied as default to FE page tests'
+      type: number
+      default: 3000
+
+steps:
+    - script: |
+          docker pull grafana/k6:latest
+      displayName: Pull k6 image
+    - ${{each testFolder in parameters.testFolders}}:
+          - script: |
+                chmod +x runAll.sh
+                chmod +x run.sh
+                docker run --rm \
+                  --user $UID \
+                  -v $(pwd):/app \
+                  --workdir "/app" \
+                  -e RESULTS_DIR=/app \
+                  -e TARGET_ENV=${{ parameters.TARGET_ENV }} \
+                  -e AUTHORIZATION_TOKEN=${{ parameters.AUTHORIZATION_TOKEN }} \
+                  -e INSTITUTION_ID=${{ parameters.INSTITUTION_ID }} \
+                  \
+                  -e VIRTUAL_USERS_ENV=${{ parameters.VIRTUAL_USERS_ENV }} \
+                  -e SCENARIO_TYPE_ENV=${{ parameters.SCENARIO_TYPE_ENV }} \
+                  \
+                  -e SCENARIO_RAMP_STAGE_NUMBER_ENV=${{ parameters.SCENARIO_RAMP_STAGE_NUMBER_ENV }} \
+                  -e SCENARIO_RAMP_TIME_UNIT_ENV=${{ parameters.SCENARIO_RAMP_TIME_UNIT_ENV }} \
+                  \
+                  -e SCENARIO_PER_VU_EXECUTIONS_ENV=${{ parameters.SCENARIO_PER_VU_EXECUTIONS_ENV }} \
+                  -e SCENARIO_PER_VU_DURATION_ENV=${{ parameters.SCENARIO_PER_VU_DURATION_ENV }} \
+                  \
+                  -e THRESHOLDS_API_MAX_AVG_MS_ENV=${{ parameters.THRESHOLDS_API_MAX_AVG_MS_ENV }} \
+                  -e THRESHOLDS_API_MAX_P90_MS_ENV=${{ parameters.THRESHOLDS_API_MAX_P90_MS_ENV }} \
+                  -e THRESHOLDS_API_MAX_P95_MS_ENV=${{ parameters.THRESHOLDS_API_MAX_P95_MS_ENV }} \
+                  \
+                  -e THRESHOLDS_FE_PAGE_MAX_AVG_MS_ENV=${{ parameters.THRESHOLDS_FE_PAGE_MAX_AVG_MS_ENV }} \
+                  -e THRESHOLDS_FE_PAGE_MAX_P90_MS_ENV=${{ parameters.THRESHOLDS_FE_PAGE_MAX_P90_MS_ENV }} \
+                  -e THRESHOLDS_FE_PAGE_MAX_P95_MS_ENV=${{ parameters.THRESHOLDS_FE_PAGE_MAX_P95_MS_ENV }} \
+                  \
+                  --entrypoint /app/runAll.sh \
+                  grafana/k6:latest \
+                  ${{ parameters.TARGET_ENV }} ${{ testFolder }}
+            condition: true
+            displayName: 'Run k6 tests in folder: ${{ testFolder }}'
+          - task: PublishTestResults@2
+            condition: true
+            displayName: 'Publishing TestResults of k6 tests in folder: ${{ testFolder }}'
+            inputs:
+                testResultsFormat: 'JUnit'
+                testResultsFiles: 'results/${{ testFolder }}/*-result.xml'
+                searchFolder: '$(System.DefaultWorkingDirectory)'
+                failTaskOnFailedTests: true
+          - task: PublishPipelineArtifact@1
+            displayName: 'Publishing results of k6 tests in folder: ${{ testFolder }}'
+            condition: true
+            inputs:
+                artifact: ${{ testFolder }}
+                targetPath: 'results/${{ testFolder }}'
+                publishLocation: 'pipeline'
