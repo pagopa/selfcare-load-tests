@@ -13,8 +13,9 @@ parameters:
           - 'uat'
 
     - name: 'AUTHORIZATION_TOKEN'
-      displayName: 'The JWT token used to invoke APIs'
+      displayName: 'The JWT token used to invoke APIs. Use ''Secret'' in order to read it from KeyVault'
       type: string
+      default: 'Secret'
     - name: 'INSTITUTION_ID'
       displayName: "The institution id to use for institution's based APIs. If Auto, it will use the first ACTIVE institution related to the token's user"
       type: string
@@ -84,7 +85,31 @@ parameters:
       type: number
       default: 3000
 
+variables:
+    ${{ if eq(parameters.TARGET_ENV, 'dev') }}:
+        azureServiceName: '$(dev_azure_azure_service_name)'
+        azurKeyVaultName: 'selc-d-kv'
+        INFLUXDB_URL: http://localhost:8086/myk6db
+    ${{ elseif eq(parameters.TARGET_ENV, 'uat') }}:
+        azureServiceName: '$(uat_azure_azure_service_name)'
+        azurKeyVaultName: 'selc-u-kv'
+        INFLUXDB_URL: http://localhost:8086/myk6db
+    ${{ elseif eq(parameters.TARGET_ENV, 'prod') }}:
+        azureServiceName: '$(prod_azure_azure_service_name)'
+        azureKeyVaultName: 'selc-p-kv'
+        INFLUXDB_URL: http://localhost:8086/myk6db
+    
+
+    ${{ if ne(parameters.AUTHORIZATION_TOKEN, 'Secret') }}:
+      load-test-authorization-token: '${{ parameters.AUTHORIZATION_TOKEN }}'
+
 steps:
+    - ${{ if eq(parameters.AUTHORIZATION_TOKEN, 'Secret') }}:
+      - task: AzureKeyVault@2
+            inputs:
+              connectedServiceName: $(azureServiceName)
+              keyVaultName: $(azureKeyVaultName)
+              secretsFilter: 'load-test-authorization-token'
     - script: |
           docker pull grafana/k6:latest
       displayName: Pull k6 image
@@ -98,8 +123,10 @@ steps:
                   --workdir "/app" \
                   -e RESULTS_DIR=/app \
                   -e TARGET_ENV=${{ parameters.TARGET_ENV }} \
-                  -e AUTHORIZATION_TOKEN=${{ parameters.AUTHORIZATION_TOKEN }} \
+                  -e AUTHORIZATION_TOKEN=$(load-test-authorization-token) \
                   -e INSTITUTION_ID=${{ parameters.INSTITUTION_ID }} \
+
+                  -e INFLUXDB_URL=${{ variables.INFLUXDB_URL }} \
                   \
                   -e VIRTUAL_USERS_ENV=${{ parameters.VIRTUAL_USERS_ENV }} \
                   -e SCENARIO_TYPE_ENV=${{ parameters.SCENARIO_TYPE_ENV }} \
