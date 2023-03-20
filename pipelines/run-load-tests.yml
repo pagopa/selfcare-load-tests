@@ -88,10 +88,10 @@ parameters:
 variables:
     ${{ if eq(parameters.TARGET_ENV, 'dev') }}:
         azureServiceName: '$(dev_azure_service_name)'
-        azurKeyVaultName: 'selc-d-kv'
+        azureKeyVaultName: 'selc-d-kv'
     ${{ elseif eq(parameters.TARGET_ENV, 'uat') }}:
         azureServiceName: '$(uat_azure_service_name)'
-        azurKeyVaultName: 'selc-u-kv'
+        azureKeyVaultName: 'selc-u-kv'
     ${{ elseif eq(parameters.TARGET_ENV, 'prod') }}:
         azureServiceName: '$(prod_azure_service_name)'
         azureKeyVaultName: 'selc-p-kv'
