@@ -87,6 +87,7 @@ parameters:
 
 variables:
     ${{ if eq(parameters.TARGET_ENV, 'dev') }}:
+        #selfHostedAgentPool: $(DEV_AGENT_POOL) TODO restore this
         selfHostedAgentPool: selfcare-dev-linux
     ${{ elseif eq(parameters.TARGET_ENV, 'uat') }}:
         selfHostedAgentPool: $(UAT_AGENT_POOL)
