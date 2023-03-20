@@ -124,7 +124,7 @@ steps:
                   -e TARGET_ENV=${{ parameters.TARGET_ENV }} \
                   -e AUTHORIZATION_TOKEN=$(load-test-authorization-token) \
                   -e INSTITUTION_ID=${{ parameters.INSTITUTION_ID }} \
-
+                  \
                   -e INFLUXDB_URL=${{ variables.INFLUXDB_URL }} \
                   \
                   -e VIRTUAL_USERS_ENV=${{ parameters.VIRTUAL_USERS_ENV }} \
