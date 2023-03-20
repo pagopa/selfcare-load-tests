@@ -36,13 +36,10 @@ mkdir -p $RESULTS_DIR/results/$(basename $(dirname $TEST_FILE))
 
 export K6_INFLUXDB_TAGS_AS_FIELDS=application,testName
 
-# TODO REMOVEME
-#INFLUXDB_URL=http://localhost:8086/myk6db
-
 if [[ -n "$INFLUXDB_URL" ]]; then
   for url in ${INFLUXDB_URL//;/ } ; do
     CURL_EXIT_CODE=
-    curl -m 1 $url > /dev/null 2>&1 || CURL_EXIT_CODE=$?
+    curl -m 1 $url || CURL_EXIT_CODE=$?
     if [ -z "$CURL_EXIT_CODE" ]; then
       INFLUXDB_CONFIG="--out influxdb=$url"
     fi
