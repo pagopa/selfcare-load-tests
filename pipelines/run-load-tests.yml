@@ -1,8 +1,5 @@
 trigger: none
 
-pool:
-    vmImage: ubuntu-22.04
-
 parameters:
     - name: 'TARGET_ENV'
       displayName: 'Target Environment'
@@ -87,6 +84,18 @@ parameters:
       displayName: 'Max P95 milliseconds applied as default to FE page tests'
       type: number
       default: 3000
+
+variables:
+    ${{ if eq(parameters.TARGET_ENV, 'dev') }}:
+        selfHostedAgentPool: selfcare-dev-linux
+    ${{ elseif eq(parameters.TARGET_ENV, 'uat') }}:
+        selfHostedAgentPool: $(UAT_AGENT_POOL)
+    ${{ elseif eq(parameters.TARGET_ENV, 'prod') }}:
+        selfHostedAgentPool: $(PROD_AGENT_POOL)
+
+pool:
+    name: $(selfHostedAgentPool)
+    vmImage: ubuntu-22.04
 
 steps:
     - script: |
