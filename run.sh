@@ -40,7 +40,19 @@ export K6_INFLUXDB_TAGS_AS_FIELDS=application,testName
 #INFLUXDB_URL=http://localhost:8086/myk6db
 
 if [[ -n "$INFLUXDB_URL" ]]; then
-  INFLUXDB_CONFIG="--out influxdb=$INFLUXDB_URL"
+  for url in ${INFLUXDB_URL//;/ } ; do
+    CURL_EXIT_CODE=
+    curl -m 1 $url > /dev/null 2>&1 || CURL_EXIT_CODE=$?
+    if [ -z "$CURL_EXIT_CODE" ]; then
+      INFLUXDB_CONFIG="--out influxdb=$url"
+    fi
+  done
+
+  if [[ -z "$INFLUXDB_CONFIG" ]]; then
+    echo "Cannot connect to influx db! In order to configure more than one possible url, use ; as separator: $INFLUXDB_URL"
+  else
+    echo "Configuring $INFLUXDB_CONFIG"
+  fi
 fi
 
 TARGET_ENV=$ENV $K6_BINARY run $TEST_FILE $INFLUXDB_CONFIG

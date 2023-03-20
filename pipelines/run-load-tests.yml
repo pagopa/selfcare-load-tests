@@ -11,6 +11,10 @@ parameters:
       values:
           - 'dev'
           - 'uat'
+    - name: 'INFLUXDB_URL'
+      displayName: 'Semicolon separated list of influxdb connections to which send metrics data. It will configure the first responding server'
+      type: string
+      default: 'http://10.1.142.4:8086/selc;http://10.1.142.5:8086/selc;http://10.1.142.6:8086/selc'
 
     - name: 'AUTHORIZATION_TOKEN'
       displayName: 'The JWT token used to invoke APIs'
@@ -98,6 +102,7 @@ steps:
                   --workdir "/app" \
                   -e RESULTS_DIR=/app \
                   -e TARGET_ENV=${{ parameters.TARGET_ENV }} \
+                  -e INFLUXDB_URL=${{ parameters.INFLUXDB_URL }} \
                   -e AUTHORIZATION_TOKEN=${{ parameters.AUTHORIZATION_TOKEN }} \
                   -e INSTITUTION_ID=${{ parameters.INSTITUTION_ID }} \
                   \
