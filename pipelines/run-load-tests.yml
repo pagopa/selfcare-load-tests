@@ -105,6 +105,7 @@ jobs:
           runOnce:
               deploy:
                   steps:
+                      - checkout: self
                       - script: |
                             docker pull grafana/k6:latest
                         displayName: Pull k6 image
