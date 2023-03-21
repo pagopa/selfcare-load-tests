@@ -89,7 +89,7 @@ parameters:
 variables:
     ${{ if eq(parameters.TARGET_ENV, 'dev') }}:
         selfHostedAgentPool: $(DEV_AGENT_POOL)
-        azureServiceName: ${{ variables.DEV_AZURE_SERVICE_NAME }}
+        azureServiceName: DEV-SELFCARE-SERVICE-CONN
         azureKeyVaultName: 'selc-d-kv'
     ${{ elseif eq(parameters.TARGET_ENV, 'uat') }}:
         selfHostedAgentPool: $(UAT_AGENT_POOL)
