@@ -89,15 +89,15 @@ parameters:
 variables:
     ${{ if eq(parameters.TARGET_ENV, 'dev') }}:
         selfHostedAgentPool: $(DEV_AGENT_POOL)
-        azureServiceName: DEV-SELFCARE-SERVICE-CONN
+        azureServiceName: 'dev_azure_service_name'
         azureKeyVaultName: 'selc-d-kv'
     ${{ elseif eq(parameters.TARGET_ENV, 'uat') }}:
         selfHostedAgentPool: $(UAT_AGENT_POOL)
-        azureServiceName: ${{ variables.UAT_AZURE_SERVICE_NAME }}
+        azureServiceName: 'uat_azure_service_name'
         azureKeyVaultName: 'selc-u-kv'
     ${{ elseif eq(parameters.TARGET_ENV, 'prod') }}:
         selfHostedAgentPool: $(PROD_AGENT_POOL)
-        azureServiceName: ${{ variables.PROD_AZURE_SERVICE_NAME }}
+        azureServiceName: 'prod_azure_service_name'
         azureKeyVaultName: 'selc-p-kv'
 
     ${{ if ne(parameters.AUTHORIZATION_TOKEN, 'Secret') }}:
@@ -116,7 +116,7 @@ jobs:
                       - ${{ if eq(parameters.AUTHORIZATION_TOKEN, 'Secret') }}:
                             - task: AzureKeyVault@2
                               inputs:
-                                  connectedServiceName: $(azureServiceName)
+                                  connectedServiceName: $($(azureServiceName))
                                   keyVaultName: $(azureKeyVaultName)
                                   secretsFilter: 'load-test-authorization-token'
                       - checkout: self
