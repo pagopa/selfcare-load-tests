@@ -45,10 +45,10 @@ The following environment variables allow to configure tests behaviors:
 
 Inside the repository there are some usefull scripts which make easy to execute tests:
 
-| SCRIPT    | Description                                                                                                                                                                                                |
-| --------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| run.sh    | It allows to execute a single \*\*.js test contained inside the src/tests folder on the provided environment using the authorization token configured through the AUTHORIZATION_TOKEN environment variable |
-| runAll.sh | It allows to execute all the tests contained inside the src/tests folder on the provided environment using the authorization token configured through the AUTHORIZATION_TOKEN environment variable         |
+| SCRIPT    | Description                                                                                                                                                                                                                                                                                                            |
+| --------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| run.sh    | It allows to execute a single \*\*.js test contained inside the src/tests folder on the provided environment using the authorization token configured through the AUTHORIZATION_TOKEN environment variable. If defined then environment variable INFLUXDB_URL, it will send metrics data towards the influx db defined |
+| runAll.sh | It allows to execute all the tests contained inside the src/tests folder on the provided environment using the authorization token configured through the AUTHORIZATION_TOKEN environment variable                                                                                                                     |
 
 ## Tests
 
