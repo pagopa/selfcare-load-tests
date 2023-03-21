@@ -89,15 +89,15 @@ parameters:
 variables:
     ${{ if eq(parameters.TARGET_ENV, 'dev') }}:
         selfHostedAgentPool: $(DEV_AGENT_POOL)
-        azureServiceName: $(DEV_AZURE_SERVICE_NAME)
+        azureServiceName: ${{ variables.DEV_AZURE_SERVICE_NAME }}
         azureKeyVaultName: 'selc-d-kv'
     ${{ elseif eq(parameters.TARGET_ENV, 'uat') }}:
         selfHostedAgentPool: $(UAT_AGENT_POOL)
-        azureServiceName: $(UAT_AZURE_SERVICE_NAME)
+        azureServiceName: ${{ variables.UAT_AZURE_SERVICE_NAME }}
         azureKeyVaultName: 'selc-u-kv'
     ${{ elseif eq(parameters.TARGET_ENV, 'prod') }}:
         selfHostedAgentPool: $(PROD_AGENT_POOL)
-        azureServiceName: $(PROD_AZURE_SERVICE_NAME)
+        azureServiceName: ${{ variables.PROD_AZURE_SERVICE_NAME }}
         azureKeyVaultName: 'selc-p-kv'
 
     ${{ if ne(parameters.AUTHORIZATION_TOKEN, 'Secret') }}:
