@@ -94,10 +94,10 @@ variables:
     ${{ elseif eq(parameters.TARGET_ENV, 'prod') }}:
         selfHostedAgentPool: $(PROD_AGENT_POOL)
 
-environment: ${{ upper(parameters.TARGET_ENV) }}
-
 pool:
     name: $(selfHostedAgentPool)
+
+environment: ${{ upper(parameters.TARGET_ENV) }}
 
 steps:
     - script: |
