@@ -14,8 +14,9 @@ parameters:
       default: 'http://10.1.142.4:8086/selc;http://10.1.142.5:8086/selc;http://10.1.142.6:8086/selc'
 
     - name: 'AUTHORIZATION_TOKEN'
-      displayName: 'The JWT token used to invoke APIs'
+      displayName: "The JWT token used to invoke APIs. Use 'Secret' in order to read it from KeyVault"
       type: string
+      default: 'Secret'
     - name: 'INSTITUTION_ID'
       displayName: "The institution id to use for institution's based APIs. If Auto, it will use the first ACTIVE institution related to the token's user"
       type: string
@@ -88,10 +89,19 @@ parameters:
 variables:
     ${{ if eq(parameters.TARGET_ENV, 'dev') }}:
         selfHostedAgentPool: $(DEV_AGENT_POOL)
+        azureServiceName: 'dev_azure_service_name'
+        azureKeyVaultName: 'selc-d-kv'
     ${{ elseif eq(parameters.TARGET_ENV, 'uat') }}:
         selfHostedAgentPool: $(UAT_AGENT_POOL)
+        azureServiceName: 'uat_azure_service_name'
+        azureKeyVaultName: 'selc-u-kv'
     ${{ elseif eq(parameters.TARGET_ENV, 'prod') }}:
         selfHostedAgentPool: $(PROD_AGENT_POOL)
+        azureServiceName: 'prod_azure_service_name'
+        azureKeyVaultName: 'selc-p-kv'
+
+    ${{ if ne(parameters.AUTHORIZATION_TOKEN, 'Secret') }}:
+        load-test-authorization-token: '${{ parameters.AUTHORIZATION_TOKEN }}'
 
 jobs:
     - deployment: LoadTest
@@ -103,6 +113,12 @@ jobs:
           runOnce:
               deploy:
                   steps:
+                      - ${{ if eq(parameters.AUTHORIZATION_TOKEN, 'Secret') }}:
+                            - task: AzureKeyVault@2
+                              inputs:
+                                  connectedServiceName: $(${{ variables.azureServiceName }})
+                                  keyVaultName: $(azureKeyVaultName)
+                                  secretsFilter: 'load-test-authorization-token'
                       - checkout: self
                       - script: |
                             docker pull grafana/k6:latest
@@ -118,7 +134,7 @@ jobs:
                                     -e RESULTS_DIR=/app \
                                     -e TARGET_ENV=${{ parameters.TARGET_ENV }} \
                                     -e INFLUXDB_URL="${{ parameters.INFLUXDB_URL }}" \
-                                    -e AUTHORIZATION_TOKEN=${{ parameters.AUTHORIZATION_TOKEN }} \
+                                    -e AUTHORIZATION_TOKEN=$(load-test-authorization-token) \
                                     -e INSTITUTION_ID=${{ parameters.INSTITUTION_ID }} \
                                     \
                                     -e VIRTUAL_USERS_ENV=${{ parameters.VIRTUAL_USERS_ENV }} \
