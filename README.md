@@ -4,6 +4,8 @@ This repository contains K6 scripts to run load tests for SelfCare api(s).
 
 In order to be able to execute them, you have to [install K6](https://k6.io/docs/get-started/installation/).
 
+See [Confluence page](https://pagopa.atlassian.net/wiki/spaces/SCP/pages/665223302/Load+testing)
+
 ## Scenarios
 
 K6 allows to configure tests having a different [workloads](https://k6.io/docs/using-k6/scenarios/), or traffic patterns.
