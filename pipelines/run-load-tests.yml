@@ -1,8 +1,5 @@
 trigger: none
 
-pool:
-    vmImage: ubuntu-22.04
-
 parameters:
     - name: 'TARGET_ENV'
       displayName: 'Target Environment'
@@ -11,6 +8,10 @@ parameters:
       values:
           - 'dev'
           - 'uat'
+    - name: 'INFLUXDB_URL'
+      displayName: 'Semicolon separated list of influxdb connections to which send metrics data. It will configure the first responding server'
+      type: string
+      default: 'http://10.1.142.4:8086/selc;http://10.1.142.5:8086/selc;http://10.1.142.6:8086/selc'
 
     - name: 'AUTHORIZATION_TOKEN'
       displayName: 'The JWT token used to invoke APIs'
@@ -84,57 +85,76 @@ parameters:
       type: number
       default: 3000
 
-steps:
-    - script: |
-          docker pull grafana/k6:latest
-      displayName: Pull k6 image
-    - ${{each testFolder in parameters.testFolders}}:
-          - script: |
-                chmod +x runAll.sh
-                chmod +x run.sh
-                docker run --rm \
-                  --user $UID \
-                  -v $(pwd):/app \
-                  --workdir "/app" \
-                  -e RESULTS_DIR=/app \
-                  -e TARGET_ENV=${{ parameters.TARGET_ENV }} \
-                  -e AUTHORIZATION_TOKEN=${{ parameters.AUTHORIZATION_TOKEN }} \
-                  -e INSTITUTION_ID=${{ parameters.INSTITUTION_ID }} \
-                  \
-                  -e VIRTUAL_USERS_ENV=${{ parameters.VIRTUAL_USERS_ENV }} \
-                  -e SCENARIO_TYPE_ENV=${{ parameters.SCENARIO_TYPE_ENV }} \
-                  \
-                  -e SCENARIO_RAMP_STAGE_NUMBER_ENV=${{ parameters.SCENARIO_RAMP_STAGE_NUMBER_ENV }} \
-                  -e SCENARIO_RAMP_TIME_UNIT_ENV=${{ parameters.SCENARIO_RAMP_TIME_UNIT_ENV }} \
-                  \
-                  -e SCENARIO_PER_VU_EXECUTIONS_ENV=${{ parameters.SCENARIO_PER_VU_EXECUTIONS_ENV }} \
-                  -e SCENARIO_PER_VU_DURATION_ENV=${{ parameters.SCENARIO_PER_VU_DURATION_ENV }} \
-                  \
-                  -e THRESHOLDS_API_MAX_AVG_MS_ENV=${{ parameters.THRESHOLDS_API_MAX_AVG_MS_ENV }} \
-                  -e THRESHOLDS_API_MAX_P90_MS_ENV=${{ parameters.THRESHOLDS_API_MAX_P90_MS_ENV }} \
-                  -e THRESHOLDS_API_MAX_P95_MS_ENV=${{ parameters.THRESHOLDS_API_MAX_P95_MS_ENV }} \
-                  \
-                  -e THRESHOLDS_FE_PAGE_MAX_AVG_MS_ENV=${{ parameters.THRESHOLDS_FE_PAGE_MAX_AVG_MS_ENV }} \
-                  -e THRESHOLDS_FE_PAGE_MAX_P90_MS_ENV=${{ parameters.THRESHOLDS_FE_PAGE_MAX_P90_MS_ENV }} \
-                  -e THRESHOLDS_FE_PAGE_MAX_P95_MS_ENV=${{ parameters.THRESHOLDS_FE_PAGE_MAX_P95_MS_ENV }} \
-                  \
-                  --entrypoint /app/runAll.sh \
-                  grafana/k6:latest \
-                  ${{ parameters.TARGET_ENV }} ${{ testFolder }}
-            condition: true
-            displayName: 'Run k6 tests in folder: ${{ testFolder }}'
-          - task: PublishTestResults@2
-            condition: true
-            displayName: 'Publishing TestResults of k6 tests in folder: ${{ testFolder }}'
-            inputs:
-                testResultsFormat: 'JUnit'
-                testResultsFiles: 'results/${{ testFolder }}/*-result.xml'
-                searchFolder: '$(System.DefaultWorkingDirectory)'
-                failTaskOnFailedTests: true
-          - task: PublishPipelineArtifact@1
-            displayName: 'Publishing results of k6 tests in folder: ${{ testFolder }}'
-            condition: true
-            inputs:
-                artifact: ${{ testFolder }}
-                targetPath: 'results/${{ testFolder }}'
-                publishLocation: 'pipeline'
+variables:
+    ${{ if eq(parameters.TARGET_ENV, 'dev') }}:
+        selfHostedAgentPool: $(DEV_AGENT_POOL)
+    ${{ elseif eq(parameters.TARGET_ENV, 'uat') }}:
+        selfHostedAgentPool: $(UAT_AGENT_POOL)
+    ${{ elseif eq(parameters.TARGET_ENV, 'prod') }}:
+        selfHostedAgentPool: $(PROD_AGENT_POOL)
+
+jobs:
+    - deployment: LoadTest
+      displayName: LoadTest
+      pool:
+          name: $(selfHostedAgentPool)
+      environment: ${{ upper(parameters.TARGET_ENV) }}
+      strategy:
+          runOnce:
+              deploy:
+                  steps:
+                      - checkout: self
+                      - script: |
+                            docker pull grafana/k6:latest
+                        displayName: Pull k6 image
+                      - ${{each testFolder in parameters.testFolders}}:
+                            - script: |
+                                  chmod +x runAll.sh
+                                  chmod +x run.sh
+                                  docker run --rm \
+                                    --user $UID \
+                                    -v $(pwd):/app \
+                                    --workdir "/app" \
+                                    -e RESULTS_DIR=/app \
+                                    -e TARGET_ENV=${{ parameters.TARGET_ENV }} \
+                                    -e INFLUXDB_URL="${{ parameters.INFLUXDB_URL }}" \
+                                    -e AUTHORIZATION_TOKEN=${{ parameters.AUTHORIZATION_TOKEN }} \
+                                    -e INSTITUTION_ID=${{ parameters.INSTITUTION_ID }} \
+                                    \
+                                    -e VIRTUAL_USERS_ENV=${{ parameters.VIRTUAL_USERS_ENV }} \
+                                    -e SCENARIO_TYPE_ENV=${{ parameters.SCENARIO_TYPE_ENV }} \
+                                    \
+                                    -e SCENARIO_RAMP_STAGE_NUMBER_ENV=${{ parameters.SCENARIO_RAMP_STAGE_NUMBER_ENV }} \
+                                    -e SCENARIO_RAMP_TIME_UNIT_ENV=${{ parameters.SCENARIO_RAMP_TIME_UNIT_ENV }} \
+                                    \
+                                    -e SCENARIO_PER_VU_EXECUTIONS_ENV=${{ parameters.SCENARIO_PER_VU_EXECUTIONS_ENV }} \
+                                    -e SCENARIO_PER_VU_DURATION_ENV=${{ parameters.SCENARIO_PER_VU_DURATION_ENV }} \
+                                    \
+                                    -e THRESHOLDS_API_MAX_AVG_MS_ENV=${{ parameters.THRESHOLDS_API_MAX_AVG_MS_ENV }} \
+                                    -e THRESHOLDS_API_MAX_P90_MS_ENV=${{ parameters.THRESHOLDS_API_MAX_P90_MS_ENV }} \
+                                    -e THRESHOLDS_API_MAX_P95_MS_ENV=${{ parameters.THRESHOLDS_API_MAX_P95_MS_ENV }} \
+                                    \
+                                    -e THRESHOLDS_FE_PAGE_MAX_AVG_MS_ENV=${{ parameters.THRESHOLDS_FE_PAGE_MAX_AVG_MS_ENV }} \
+                                    -e THRESHOLDS_FE_PAGE_MAX_P90_MS_ENV=${{ parameters.THRESHOLDS_FE_PAGE_MAX_P90_MS_ENV }} \
+                                    -e THRESHOLDS_FE_PAGE_MAX_P95_MS_ENV=${{ parameters.THRESHOLDS_FE_PAGE_MAX_P95_MS_ENV }} \
+                                    \
+                                    --entrypoint /app/runAll.sh \
+                                    grafana/k6:latest \
+                                    ${{ parameters.TARGET_ENV }} ${{ testFolder }}
+                              condition: true
+                              displayName: 'Run k6 tests in folder: ${{ testFolder }}'
+                            - task: PublishTestResults@2
+                              condition: true
+                              displayName: 'Publishing TestResults of k6 tests in folder: ${{ testFolder }}'
+                              inputs:
+                                  testResultsFormat: 'JUnit'
+                                  testResultsFiles: 'results/${{ testFolder }}/*-result.xml'
+                                  searchFolder: '$(System.DefaultWorkingDirectory)'
+                                  failTaskOnFailedTests: true
+                            - task: PublishPipelineArtifact@1
+                              displayName: 'Publishing results of k6 tests in folder: ${{ testFolder }}'
+                              condition: true
+                              inputs:
+                                  artifact: ${{ testFolder }}
+                                  targetPath: 'results/${{ testFolder }}'
+                                  publishLocation: 'pipeline'
