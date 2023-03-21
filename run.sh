@@ -40,7 +40,7 @@ if [[ -n "$INFLUXDB_URL" ]]; then
   for url in ${INFLUXDB_URL//;/ } ; do
     CURL_EXIT_CODE=
     wget --timeout 1 --tries 1 $url || CURL_EXIT_CODE=$?
-    echo $url -> $CURL_EXIT_CODE
+    echo "$url -> $CURL_EXIT_CODE"
     if [[ "$CURL_EXIT_CODE" == "8" ]]; then
       INFLUXDB_CONFIG="--out influxdb=$url"
     fi
