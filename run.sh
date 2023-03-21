@@ -41,6 +41,7 @@ if [[ -n "$INFLUXDB_URL" ]]; then
     WGETRESULT=$(wget --timeout 1 --tries 1 $url 2>&1) || WGETRETURNCODE=$?
     echo "testing $url -> $WGETRESULT"
     if [[ "$WGETRESULT" =~ "ERROR 404" ]]; then
+      echo "OK $url"
       INFLUXDB_CONFIG="--out influxdb=$url"
     fi
   done
