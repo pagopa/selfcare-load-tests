@@ -1522,7 +1522,7 @@
                 "multi": false,
                 "name": "testName",
                 "options": [],
-                "query": "SELECT \"testName\" FROM \"data_sent\" WHERE $timeFilter  GROUP BY \"testName\"",
+                "query": "SELECT \"testName\" FROM \"data_sent\" WHERE $timeFilter and \"application\" = '$application' GROUP BY \"testName\"",
                 "refresh": 2,
                 "regex": "",
                 "skipUrlSync": false,
