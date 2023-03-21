@@ -39,9 +39,7 @@ export K6_INFLUXDB_TAGS_AS_FIELDS=application,testName
 if [[ -n "$INFLUXDB_URL" ]]; then
   for url in ${INFLUXDB_URL//;/ } ; do
     WGETRESULT=$(wget --timeout 1 --tries 1 $url 2>&1) || WGETRETURNCODE=$?
-    echo "testing $url -> $WGETRESULT"
-    if [[ "$WGETRESULT" =~ "ERROR 404" ]]; then
-      echo "OK $url"
+    if [[ "$WGETRESULT" =~ "404 Not Found" ]]; then
       INFLUXDB_CONFIG="--out influxdb=$url"
     fi
   done
