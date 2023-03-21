@@ -116,7 +116,7 @@ jobs:
                       - ${{ if eq(parameters.AUTHORIZATION_TOKEN, 'Secret') }}:
                             - task: AzureKeyVault@2
                               inputs:
-                                  connectedServiceName: $($(azureServiceName))
+                                  connectedServiceName: $(${{ variables.azureServiceName }})
                                   keyVaultName: $(azureKeyVaultName)
                                   secretsFilter: 'load-test-authorization-token'
                       - checkout: self
