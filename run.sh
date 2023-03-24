@@ -2,7 +2,7 @@
 
 # Execute a single test on target environment.
 #
-# Usage: ./run.sh <dev|uat|prod> testFile.js
+# Usage: ./run.sh <DEV|UAT|PROD> testFile.js
 
 export RESULTS_DIR=$RESULTS_DIR || $(dirname $0)
 
@@ -20,8 +20,8 @@ set -e
 ENV=$1
 TEST_FILE=$2
 
-if [[ -z "$ENV" || ! $(echo $ENV | grep  -E "^(dev|uat|prod)$") || -z "$TEST_FILE" ]]; then
-  echo "Usage: ./run.sh <dev|uat|prod> testFile.js"
+if [[ -z "$ENV" || ! $(echo $ENV | grep  -E "^(DEV|UAT|PROD)$") || -z "$TEST_FILE" ]]; then
+  echo "Usage: ./run.sh <DEV|UAT|PROD> testFile.js"
   exit 0
 fi
 

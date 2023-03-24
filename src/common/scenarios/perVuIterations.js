@@ -1,15 +1,9 @@
-import { coalesce, vu } from '../../utils/utils.js'
-
-const scenarioPerVuExecutions = coalesce(
-    __ENV.SCENARIO_PER_VU_EXECUTIONS_ENV,
-    1
-)
-const scenarioPerVuDuration = coalesce(__ENV.SCENARIO_PER_VU_DURATION_ENV, 10)
+import { CONFIG } from '../../config/envVars.js'
 
 export default {
     executor: 'per-vu-iterations',
-    vus: vu,
-    iterations: scenarioPerVuExecutions,
+    vus: CONFIG.VIRTUAL_USERS,
+    iterations: CONFIG.SCENARIOS.perVuIterations.EXECUTIONS,
     startTime: '0s',
-    maxDuration: `${scenarioPerVuDuration}s`,
+    maxDuration: `${CONFIG.SCENARIOS.perVuIterations.DURATION}s`,
 }

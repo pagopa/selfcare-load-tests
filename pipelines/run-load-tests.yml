@@ -4,10 +4,10 @@ parameters:
     - name: 'TARGET_ENV'
       displayName: 'Target Environment'
       type: string
-      default: 'uat'
+      default: 'UAT'
       values:
-          - 'dev'
-          - 'uat'
+          - 'DEV'
+          - 'UAT'
     - name: 'INFLUXDB_URL'
       displayName: 'Semicolon separated list of influxdb connections to which send metrics data. It will configure the first responding server'
       type: string
@@ -36,14 +36,19 @@ parameters:
     - name: 'SCENARIO_TYPE_ENV'
       displayName: 'Scenario type'
       type: string
-      default: 'All'
+      default: 'ALL'
       values:
-          - 'All'
+          - 'ALL'
           - 'rampingArrivalRate'
+          - 'rampingGrowingArrivalRate'
           - 'perVuIterations'
 
     - name: 'SCENARIO_RAMP_STAGE_NUMBER_ENV'
       displayName: 'rampingArrivalRate scenario: Number of ramping stages (min: 3)'
+      type: number
+      default: 3
+    - name: 'SCENARIO_RAMP_STAGE_MAX_VU_ENV'
+      displayName: 'rampingArrivalRate scenario: Max number of vu stage (max: vu/2)'
       type: number
       default: 3
     - name: 'SCENARIO_RAMP_TIME_UNIT_ENV'

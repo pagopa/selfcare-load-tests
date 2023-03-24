@@ -2,6 +2,7 @@ import { randomIntBetween } from 'https://jslib.k6.io/k6-utils/1.4.0/index.js'
 import { CONFIG } from '../../config/envVars.js'
 
 const scenarioRampCustomStages = setStages(
+    CONFIG.SCENARIOS.RAMPS.rampingGrowingArrivalRate.RAMP_BUILDING_VU_POOL,
     CONFIG.SCENARIOS.RAMPS.STAGE_SECONDS_DURATION,
     CONFIG.SCENARIOS.RAMPS.STAGES_NUMBER,
     CONFIG.VIRTUAL_USERS
@@ -15,16 +16,24 @@ export default {
     stages: scenarioRampCustomStages,
 }
 
-function setStages(timeUnit, stageNumber, maxStageVu) {
+function setStages(rampBuildingVuPool, timeUnit, stageNumber, maxStageVu) {
     const arr = new Array(stageNumber)
-    for (let i = 0; i < stageNumber; i++) {
-        let stageVu
+    for (let i = stageNumber - 1; i >= 0; i--) {
         if (i == stageNumber - 1) {
-            stageVu = 0
+            arr[i] = { duration: `${timeUnit}s`, target: 0 }
+        } else if (i == 0) {
+            arr[i] = {
+                duration: `${timeUnit}s`,
+                target: Math.min(rampBuildingVuPool, maxStageVu),
+            }
         } else {
-            stageVu = randomIntBetween(1, maxStageVu)
+            let r = randomIntBetween(
+                1,
+                Math.min(maxStageVu, rampBuildingVuPool / 2 - 1)
+            )
+            arr[i] = { duration: `${timeUnit}s`, target: r }
+            rampBuildingVuPool -= r
         }
-        arr[i] = { duration: `${timeUnit}s`, target: stageVu }
     }
     return arr
 }

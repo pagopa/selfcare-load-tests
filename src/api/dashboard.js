@@ -1,5 +1,6 @@
 import http from 'k6/http'
-import { defaultHeaders, logResult } from '../utils/utils.js'
+import { logResult } from '../utils/utils.js'
+import { defaultHeaders } from '../config/envVars.js'
 
 const API_PREFIX = '/dashboard/v1'
 

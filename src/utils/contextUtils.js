@@ -2,10 +2,11 @@ import { check } from 'k6'
 import { assert, statusOk } from '../utils/assertions.js'
 import { getInstitutions } from '../api/dashboard.js'
 import { abort } from './utils.js'
+import { CONFIG } from '../config/envVars.js'
 
 export function retrieveInstitutionId(baseUrl) {
-    if (__ENV.INSTITUTION_ID && __ENV.INSTITUTION_ID !== 'Auto') {
-        return __ENV.INSTITUTION_ID
+    if (CONFIG.CONTEXT_DATA.INSTITUTION_ID !== 'Auto') {
+        return CONFIG.CONTEXT_DATA.INSTITUTION_ID
     } else {
         const result = getInstitutions(baseUrl)
         assert(result, [statusOk()])
