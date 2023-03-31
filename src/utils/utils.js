@@ -1,4 +1,4 @@
-import { exec } from 'k6/execution'
+import exec from 'k6/execution'
 
 export function logResult(opName, expectedHttpState, result) {
     if (__ENV.REQ_DUMP) {
