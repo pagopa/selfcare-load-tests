@@ -17,6 +17,14 @@ fi
 
 set -e
 
+FILE=./local.env
+if [ -f "$FILE" ]; then
+    echo "$FILE exists."
+  set -o allexport
+  source $FILE
+  set +o allexport
+fi
+
 ENV=$1
 TEST_FILE=$2
 
