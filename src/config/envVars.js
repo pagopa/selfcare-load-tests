@@ -5,6 +5,7 @@ if (!__ENV.AUTHORIZATION_TOKEN) {
 }
 
 const vu = __ENV.VIRTUAL_USERS_ENV ? __ENV.VIRTUAL_USERS_ENV : 3
+const target = __ENV.TARGET_ENV ? __ENV.TARGET_ENV : 'SELFCARE'
 
 const rampStageNumber = Math.max(
     coalesce(__ENV.SCENARIO_RAMP_STAGE_NUMBER_ENV, 3),
@@ -14,19 +15,29 @@ const rampStageNumber = Math.max(
 export const CONFIG = {
     ENVS: {
         DEV: {
-            baseUrl: 'https://api.dev.selfcare.pagopa.it',
+            baseUrl:
+                target === 'SELFCARE'
+                    ? 'https://api.dev.selfcare.pagopa.it'
+                    : 'https://api-pnpg.dev.selfcare.pagopa.it',
         },
         UAT: {
-            baseUrl: 'https://api.uat.selfcare.pagopa.it',
+            baseUrl:
+                target === 'SELFCARE'
+                    ? 'https://api.uat.selfcare.pagopa.it'
+                    : 'https://api-pnpg.uat.selfcare.pagopa.it',
         },
         PROD: {
-            baseUrl: 'https://api.selfcare.pagopa.it',
+            baseUrl:
+                target === 'SELFCARE'
+                    ? 'https://api.selfcare.pagopa.it'
+                    : 'https://api-pnpg.selfcare.pagopa.it',
         },
     },
 
     TARGET_ENV: __ENV.TARGET_ENV,
     AUTHORIZATION_TOKEN: __ENV.AUTHORIZATION_TOKEN,
     DUMP_REQUESTS: __ENV.REQ_DUMP,
+    INSTITUTION_ID: __ENV.INSTITUTION_ID,
 
     CONTEXT_DATA: {
         institutionId: coalesce(__ENV.INSTITUTION_ID, 'Auto'),
@@ -39,7 +50,7 @@ export const CONFIG = {
 
         perVuIterations: {
             EXECUTIONS: coalesce(__ENV.SCENARIO_PER_VU_EXECUTIONS_ENV, 1),
-            DURATION: coalesce(__ENV.SCENARIO_PER_VU_DURATION_ENV, 10),
+            DURATION: coalesce(__ENV.SCENARIO_PER_VU_DURATION_ENV, 30),
         },
 
         RAMPS: {
