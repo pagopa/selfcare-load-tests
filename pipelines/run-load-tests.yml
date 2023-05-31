@@ -21,6 +21,21 @@ parameters:
       displayName: "The institution id to use for institution's based APIs. If Auto, it will use the first ACTIVE institution related to the token's user"
       type: string
       default: 'Auto'
+    - name: 'PRODUCT_ID'
+      displayName: 'The product id to use for onboarding API.'
+      type: string
+      default: 'Auto'
+    - name: 'EXTERNAL_INSTITUTION_ID'
+      displayName: 'The external institution id to use for onboarding API.'
+      type: string
+      default: 'Auto'
+    - name: 'TARGET_APP'
+      displayName: 'The target application'
+      type: string
+      default: 'SELFCARE'
+      values:
+          - 'SELFCARE'
+          - 'PNPG'
 
     - name: 'testFolders'
       displayName: 'Which tests should be executed'
@@ -28,6 +43,7 @@ parameters:
       default:
           - 'dashboard'
           - 'fe-dashboard'
+          - 'onboarding'
 
     - name: 'VIRTUAL_USERS_ENV'
       displayName: 'Number of virtual users (1 - 100 000)'
@@ -141,6 +157,9 @@ jobs:
                                     -e INFLUXDB_URL="${{ parameters.INFLUXDB_URL }}" \
                                     -e AUTHORIZATION_TOKEN=$(load-test-authorization-token) \
                                     -e INSTITUTION_ID=${{ parameters.INSTITUTION_ID }} \
+                                    -e EXTERNAL_INSTITUTION_ID=${{ parameters.EXTERNAL_INSTITUTION_ID }} \
+                                    -e PRODUCT_ID=${{ parameters.PRODUCT_ID }} \
+                                    -e TARGET_APP=${{ parameters.TARGET_APP }} \
                                     \
                                     -e VIRTUAL_USERS_ENV=${{ parameters.VIRTUAL_USERS_ENV }} \
                                     -e SCENARIO_TYPE_ENV=${{ parameters.SCENARIO_TYPE_ENV }} \
