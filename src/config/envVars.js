@@ -5,7 +5,7 @@ if (!__ENV.AUTHORIZATION_TOKEN) {
 }
 
 const vu = __ENV.VIRTUAL_USERS_ENV ? __ENV.VIRTUAL_USERS_ENV : 3
-const target = __ENV.TARGET_ENV ? __ENV.TARGET_ENV : 'SELFCARE'
+const target = __ENV.TARGET_APP ? __ENV.TARGET_APP : 'SELFCARE'
 
 const rampStageNumber = Math.max(
     coalesce(__ENV.SCENARIO_RAMP_STAGE_NUMBER_ENV, 3),
